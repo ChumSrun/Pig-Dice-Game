@@ -1,101 +1,87 @@
-const dice = document.getElementById("dice");
-const rollDice = document.getElementById("rollDice");
-const keep = document.getElementById("keep");
-const player2 = document.getElementById("player2");
-const player1 = document.getElementById("player1");
-const currentScoreP1Text = document.getElementById("currentScoreP1");
-const currentScoreP2Text = document.getElementById("currentScoreP2");
-const scoreP1Text = document.getElementById("scoreP1");
-const scoreP2Text = document.getElementById("scoreP2");
-const finalScoreText = document.getElementById("finalScore");
+const player1Name = document.getElementById("name-0")
+const player1Score = document.getElementById("score-0")
+const player2Name = document.getElementById("name-1")
+const player2Score = document.getElementById("score-1")
+const player1CurrentScore = document.getElementById("current-0")
+const player2CurrentScore = document.getElementById("current-1")
+const dice1 = document.getElementById('dice-1')
+const dice2 = document.getElementById('dice-2')
+const btnRoll = document.querySelector('.btn-roll');
+const btnHold = document.querySelector('.btn-hold');
+const btnNew = document.querySelector('.btn-new');
+const player1Panel = document.querySelector('.player-0-panel');
+const player2Panel = document.querySelector('.player-1-panel');
+const finalScore = document.querySelector('.final-score');
 
-const pathDiscImg = "./assets/image/dice-";
-const numberOfImg = [1, 2, 3, 4, 5, 6];
-const sourceImg = numberOfImg.map(value => `${pathDiscImg}${value}.png`);
+var scores, roundScore, activePlayer, gamePlaying;
 
-const randNum = (min, max) => {
-    return Math.floor(Math.random() * max - min + 1) + min;
+const init = () => {
+    score = [0, 0];
+    roundScore = 0;
+    gamePlaying = true;
+    activePlayer = 0;
+    player1Name.textContent = "PLAYER 1";
+    player1Score.textContent = 0;
+    player2Name.textContent = "PLAYER 2";
+    player2Score.textContent = 0;
+    player1CurrentScore.textContent = 0;
+    player2CurrentScore.textContent = 0;
+    dice1.style.display = "none";
+    dice2.style.display = "none";
+    player1Panel.classList.remove('winner');
+    player2Panel.classList.remove('winner');
+    player1Panel.classList.remove('active');
+    player2Panel.classList.remove('active');
+    player1Panel.classList.add('active');
+};
+
+const nextPlayer = () => {
+    player1Panel.classList.toggle("active");
+    player2Panel.classList.toggle("active");
+    dice1.style.display = "none"
+    dice2.style.display = "none"
+    roundScore = 0;
+    document.getElementById(`current-${activePlayer}`).textContent = roundScore;
+    activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
 }
 
+const randomNum = (min, max) => {
+    return (Math.floor(Math.random() * max - min + 1) + 1);
+}
 
-let sumRollScore = 0;
-let PlayerTurn = 0;
-let scoreP1 = 0;
-let scoreP2 = 0;
-let currentScoreP1 = 0;
-let currentScoreP2 = 0;
-let finalScore = 100;
-const changeDiscImg = () => {
-    dice.style.display = "block"
-    let ranNum = randNum(1, 6);
-    if (ranNum != 1) {
-        sumRollScore += ranNum;
-        dice.src = sourceImg[ranNum - 1];
-    } else {
-        dice.style.display = "none"
-        if (PlayerTurn === 0) {
-            player1.style.border = "none";
-            player2.style.border = "1px solid red";
-            currentScoreP1Text.innerHTML = 0;
+init();
+
+btnRoll.addEventListener("click", () => {
+    if (gamePlaying) {
+        let randNumDice1 = randomNum(1, 6);
+        let randNumDice2 = randomNum(1, 6);
+        dice1.style.display = "block"
+        dice2.style.display = "block"
+        dice1.src = `./assets/image/dice-${randNumDice1}.png`
+        dice2.src = `./assets/image/dice-${randNumDice2}.png`
+        if (randNumDice2 !== 1 && randNumDice1 !== 1) {
+            roundScore += randNumDice1 + randNumDice2;
+            document.getElementById(`current-${activePlayer}`).textContent = roundScore;
         } else {
-            player2.style.border = "none";
-            player1.style.border = "1px solid red";
-            currentScoreP2Text.innerHTML = 0;
+            nextPlayer();
         }
-        (PlayerTurn == 0) ? PlayerTurn = 1: PlayerTurn = 0;
-        sumRollScore = 0;
     }
-    (PlayerTurn === 0) ? currentScoreP1Text.innerHTML = sumRollScore: currentScoreP2Text.innerHTML = sumRollScore;
-    console.log(sumRollScore);
-}
-
-rollDice.addEventListener("click", changeDiscImg)
-
-keep.addEventListener("click", () => {
-    console.log(PlayerTurn);
-    if (PlayerTurn === 0) {
-        player1.style.border = "none";
-        player2.style.border = "1px solid red";
-        currentScoreP1Text.innerHTML = 0;
-        scoreP1 += sumRollScore;
-        scoreP1Text.innerText = scoreP1;
-        PlayerTurn = 1;
-        Winner();
-    } else {
-        player2.style.border = "none";
-        player1.style.border = "1px solid red";
-        currentScoreP2Text.innerHTML = 0;
-        scoreP2 += sumRollScore;
-        scoreP2Text.innerText = scoreP2;
-        PlayerTurn = 0;
-        Winner()
-    }
-    sumRollScore = 0;
 })
 
-
-finalScoreText.addEventListener("keyup", () => {
-    finalScore = finalScoreText.value;
-    console.log(finalScore);
-})
-
-function Winner() {
-    if (finalScore <= scoreP2 || finalScore <= scoreP1) {
-        (finalScore <= scoreP1) ? player1.innerText = "Winner": player2.innerText = "Winner"
+btnHold.addEventListener("click", () => {
+    if (gamePlaying) {
+        score[activePlayer] += roundScore;
+        document.getElementById(`score-${activePlayer}`).textContent = score[activePlayer];
+        let winnerScore;
+        finalScore.value ? winnerScore = finalScore.value : winnerScore = 100;
+        if (score[activePlayer] >= winnerScore) {
+            let winnerPlayer = document.getElementById(`name-${activePlayer}`);
+            winnerPlayer.textContent = "WINNER";
+            gamePlaying = false;
+        } else {
+            nextPlayer();
+        }
     }
-}
-document.getElementById("newGame").addEventListener("click", () => {
-    init();
 })
 
-function init() {
-    player1.innerText = "Player1";
-    player2.innerText = "Player2";
-    sumRollScore = 0;
-    scoreP2 = 0;
-    scoreP1 = 0;
-    currentScoreP2Text.innerHTML = 0;
-    currentScoreP1Text.innerHTML = 0;
-    scoreP2Text.innerHTML = 0;
-    scoreP1Text.innerHTML = 0;
-}
+btnNew.addEventListener("click", init);
