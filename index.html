@@ -5,23 +5,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Pig Dice Game</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 
 <body>
-    <button id="newGame">New Game</button>
-    <h2 style="border:1px solid red" id="player1">player1</h2>
-    <p id="scoreP1">0</p>
-    <p>current score: <span id="currentScoreP1">0</span>
-    </p>
-    <button id="rollDice">Roll Dice</button>
-    <button id="keep">Hold</button>
-    <img style="display:none" src="./assets/image/dice-1.png" id="dice">
-    <input type="number" name="" id="finalScore">
-    <h2 id="player2">player2</h2>
-    <p id="scoreP2">0</p>
-    <p>current score: <span id="currentScoreP2">0</span></p>
+    <header id="header">
+        <h1>Pig Dice Game</h1>
+        <h1>Game Rules</h1>
+    </header>
+    <nav>
+        <button class="btn" id="newGame">New Game</button>
+        <input class="input" type="number" id="finalScore">
+    </nav>
+    <main class="container">
+        <section class="playerPanel active" id="player1">
+            <h2 style="border:1px solid red" id="player1">player1</h2>
+            <p class="playerScore" id="scoreP1">0</p>
+            <p class="currentScore">current score: <span id="currentScoreP1">0</span></p>
+        </section>
 
+        <section id="controller">
+            <div>
+                <button class="btn" id="rollDice">Roll Dice</button>
+                <button class="btn" id="keep">Hold</button>
+            </div>
+
+            <div id="imgPanel">
+                <img class="diceImg" style="display:none" src="./assets/image/dice-1.png" id="dice1">
+                <img class="diceImg" style="display:none" src="./assets/image/dice-1.png" id="dice2">
+            </div>
+
+        </section>
+
+        <section class="playerPanel" id="player2">
+            <h2>player2</h2>
+            <p class="playerScore" id="scoreP2">0</p>
+            <p class="currentScore">current score: <span id="currentScoreP2">0</span></p>
+        </section>
+    </main>
+
+    <footer>
+        <a href="#"><i>icon</i></a>
+        <p>Copyright 2019</p>
+    </footer>
 
     <script src="assets/js/script.js"></script>
 </body>

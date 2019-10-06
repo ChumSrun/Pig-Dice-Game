@@ -1,4 +1,5 @@
-const dice = document.getElementById("dice");
+const dice = document.getElementById("dice1");
+const dice2 = document.getElementById("dice2");
 const rollDice = document.getElementById("rollDice");
 const keep = document.getElementById("keep");
 const player2 = document.getElementById("player2");
@@ -19,18 +20,31 @@ const randNum = (min, max) => {
 
 
 let sumRollScore = 0;
+let sumRollScore2 = 0;
 let PlayerTurn = 0;
 let scoreP1 = 0;
 let scoreP2 = 0;
 let currentScoreP1 = 0;
 let currentScoreP2 = 0;
 let finalScore = 100;
+let previousScore = 0;
 const changeDiscImg = () => {
     dice.style.display = "block"
-    let ranNum = randNum(1, 6);
-    if (ranNum != 1) {
-        sumRollScore += ranNum;
-        dice.src = sourceImg[ranNum - 1];
+    dice2.style.display = "block"
+    let ranNum1 = randNum(1, 6);
+    let ranNum2 = randNum(1, 6);
+
+    if (ranNum1 != 1 && ranNum1 !== previousScore) {
+        sumRollScore += ranNum1;
+        sumRollScore2 += ranNum2;
+        dice.src = sourceImg[ranNum1 - 1];
+        dice2.src = sourceImg[ranNum2 - 1];
+        if (ranNum1 == 6) {
+            previousScore = ranNum1;
+        } else {
+            previousScore = 0;
+        }
+        console.log(previousScore);
     } else {
         dice.style.display = "none"
         if (PlayerTurn === 0) {
@@ -44,20 +58,21 @@ const changeDiscImg = () => {
         }
         (PlayerTurn == 0) ? PlayerTurn = 1: PlayerTurn = 0;
         sumRollScore = 0;
+        sumRollScore2 = 0;
     }
-    (PlayerTurn === 0) ? currentScoreP1Text.innerHTML = sumRollScore: currentScoreP2Text.innerHTML = sumRollScore;
-    console.log(sumRollScore);
+    (PlayerTurn === 0) ? currentScoreP1Text.innerHTML = sumRollScore + sumRollScore2: currentScoreP2Text.innerHTML = sumRollScore + sumRollScore2;
+
 }
 
 rollDice.addEventListener("click", changeDiscImg)
 
 keep.addEventListener("click", () => {
-    console.log(PlayerTurn);
+
     if (PlayerTurn === 0) {
         player1.style.border = "none";
         player2.style.border = "1px solid red";
         currentScoreP1Text.innerHTML = 0;
-        scoreP1 += sumRollScore;
+        scoreP1 += sumRollScore + sumRollScore2;
         scoreP1Text.innerText = scoreP1;
         PlayerTurn = 1;
         Winner();
@@ -65,18 +80,18 @@ keep.addEventListener("click", () => {
         player2.style.border = "none";
         player1.style.border = "1px solid red";
         currentScoreP2Text.innerHTML = 0;
-        scoreP2 += sumRollScore;
+        scoreP2 += sumRollScore + sumRollScore2;
         scoreP2Text.innerText = scoreP2;
         PlayerTurn = 0;
         Winner()
     }
     sumRollScore = 0;
+    sumRollScore2 = 0;
 })
 
 
 finalScoreText.addEventListener("keyup", () => {
     finalScore = finalScoreText.value;
-    console.log(finalScore);
 })
 
 function Winner() {
